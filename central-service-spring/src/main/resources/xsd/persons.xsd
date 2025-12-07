@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:tns="http://centralservicespring.assistant.com/persons"
+           targetNamespace="http://centralservicespring.assistant.com/persons"
+           elementFormDefault="qualified">
+
+    <xs:simpleType name="Country">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="RUSSIA"/>
+            <xs:enumeration value="CHINA"/>
+            <xs:enumeration value="INDIA"/>
+            <xs:enumeration value="ITALY"/>
+            <xs:enumeration value="SOUTH_KOREA"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="HairColor">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="BLONDE"/>
+            <xs:enumeration value="BRUNETTE"/>
+            <xs:enumeration value="BROWN"/>
+            <xs:enumeration value="RED"/>
+            <xs:enumeration value="BLACK"/>
+            <xs:enumeration value="GRAY"/>
+            <xs:enumeration value="WHITE"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="EyeColor">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="BROWN"/>
+            <xs:enumeration value="BLUE"/>
+            <xs:enumeration value="GREEN"/>
+            <xs:enumeration value="GRAY"/>
+            <xs:enumeration value="BLACK"/>
+            <xs:enumeration value="AMBER"/>
+            <xs:enumeration value="HAZEL"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="Coordinates">
+        <xs:sequence>
+            <xs:element name="x" type="xs:double"/>
+            <xs:element name="y" type="xs:int"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Location">
+        <xs:sequence>
+            <xs:element name="x" type="xs:float" nillable="true"/>
+            <xs:element name="y" type="xs:int"/>
+            <xs:element name="name" type="xs:string" nillable="true"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Person">
+        <xs:sequence>
+            <xs:element name="id" type="xs:int" minOccurs="0"/>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="coordinates" type="tns:Coordinates"/>
+            <xs:element name="creationDate" type="xs:dateTime" minOccurs="0"/>
+            <xs:element name="height" type="xs:double"/>
+            <xs:element name="birthday" type="xs:date"/>
+            <xs:element name="weight" type="xs:long" nillable="true"/>
+            <xs:element name="nationality" type="tns:Country"/>
+            <xs:element name="location" type="tns:Location"/>
+            <xs:element name="hairColor" type="tns:HairColor" nillable="true"/>
+            <xs:element name="eyeColor" type="tns:EyeColor" nillable="true"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="GetPersonsRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="page" type="xs:int" default="0"/>
+                <xs:element name="size" type="xs:int" default="20"/>
+                <xs:element name="sort" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element name="id" type="xs:int" minOccurs="0"/>
+                <xs:element name="name" type="xs:string" minOccurs="0"/>
+                <xs:element name="height" type="xs:double" minOccurs="0"/>
+                <xs:element name="weight" type="xs:long" minOccurs="0"/>
+                <xs:element name="nationality" type="xs:string" minOccurs="0"/>
+                <xs:element name="birthday" type="xs:string" minOccurs="0"/>
+                <xs:element name="idLt" type="xs:int" minOccurs="0"/>
+                <xs:element name="idGt" type="xs:int" minOccurs="0"/>
+                <xs:element name="heightLt" type="xs:double" minOccurs="0"/>
+                <xs:element name="heightGt" type="xs:double" minOccurs="0"/>
+                <xs:element name="weightLt" type="xs:long" minOccurs="0"/>
+                <xs:element name="weightGt" type="xs:long" minOccurs="0"/>
+                <xs:element name="birthdayLt" type="xs:string" minOccurs="0"/>
+                <xs:element name="birthdayGt" type="xs:string" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="GetPersonsResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="persons" type="tns:Person" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element name="totalCount" type="xs:int"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="CreatePersonRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="person" type="tns:Person"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="CreatePersonResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="person" type="tns:Person"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="GetPersonByIdRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="id" type="xs:int"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="GetPersonByIdResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="person" type="tns:Person"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="UpdatePersonRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="id" type="xs:int"/>
+                <xs:element name="person" type="tns:Person"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="UpdatePersonResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="person" type="tns:Person"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="DeletePersonRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="id" type="xs:int"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="DeletePersonResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="success" type="xs:boolean"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="GetAverageWeightRequest">
+        <xs:complexType>
+            <xs:sequence/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="GetAverageWeightResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="averageWeight" type="xs:double"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="CountByLocationRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="x" type="xs:float" minOccurs="0"/>
+                <xs:element name="y" type="xs:int" minOccurs="0"/>
+                <xs:element name="name" type="xs:string" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="CountByLocationResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="count" type="xs:int"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="GetPersonsByHeightRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="minHeight" type="xs:double"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="GetPersonsByHeightResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="persons" type="tns:Person" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="CountByHairColorRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="hairColor" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="CountByHairColorResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="count" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="GetPercentageByNationalityAndEyeColorRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="nationality" type="xs:string"/>
+                <xs:element name="eyeColor" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="GetPercentageByNationalityAndEyeColorResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="percentage" type="xs:double"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="ServiceFault">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="message" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>

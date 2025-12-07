@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jboss-ejb-client xmlns="urn:jboss:ejb-client:1.4">
+    <connections>
+        <connection host="localhost" port="7661" protocol="http-remoting">
+            <channel-creation-options>
+                <property name="org.xnio.Options.SSL_ENABLED" value="false"/>
+                <property name="org.xnio.Options.SASL_POLICY_NOPLAINTEXT" value="false"/>
+                <property name="org.xnio.Options.SASL_DISALLOWED_MECHANISMS" value="JBOSS-LOCAL-USER"/>
+            </channel-creation-options>
+        </connection>
+    </connections>
+</jboss-ejb-client>

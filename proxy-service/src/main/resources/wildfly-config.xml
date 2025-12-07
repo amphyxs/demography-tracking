@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <authentication-client xmlns="urn:elytron:client:1.2">
+        <authentication-rules>
+            <rule use-configuration="ejb-config">
+                <match-host name="localhost"/>
+            </rule>
+        </authentication-rules>
+        <authentication-configurations>
+            <configuration name="ejb-config">
+                <set-user-name name="ejbuser"/>
+                <credentials>
+                    <clear-password password="ejbpassword123"/>
+                </credentials>
+                <sasl-mechanism-selector selector="DIGEST-MD5"/>
+            </configuration>
+        </authentication-configurations>
+    </authentication-client>
+    
+    <jboss-ejb-client xmlns="urn:jboss:wildfly-client-ejb:3.0">
+        <connections>
+            <connection uri="http-remoting://localhost:7661"/>
+        </connections>
+    </jboss-ejb-client>
+</configuration>

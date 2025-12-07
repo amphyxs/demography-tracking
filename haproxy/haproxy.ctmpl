@@ -1,0 +1,54 @@
+global
+    log stdout format raw local0
+    pidfile /home/studs/s367527/haproxy.pid
+    maxconn 4096
+
+defaults
+    log     global
+    mode    http
+    option  httplog
+    option  dontlognull
+    timeout connect 5000ms
+    timeout client  50000ms
+    timeout server  50000ms
+
+frontend central_front
+    bind *:18085
+    default_backend central_back
+
+backend central_back
+    balance roundrobin
+    option httpchk GET /actuator/health
+    http-check expect status 200
+
+    {{range service "central-service-spring"}}
+    {{if index .ServiceMeta "management-port"}}
+    server node-{{.Port}} {{.Address}}:{{.Port}} check port {{index .ServiceMeta "management-port"}} ssl verify none
+    {{else}}
+    server node-{{.Port}} {{.Address}}:{{.Port}} ssl verify none
+    {{end}}
+    {{end}}
+
+frontend proxy_front
+    bind *:18086
+    default_backend proxy_back
+
+backend proxy_back
+    balance roundrobin
+    option httpchk GET /actuator/health
+    http-check expect status 200
+
+    {{range service "proxy-service"}}
+    {{if index .ServiceMeta "management-port"}}
+    server proxy-{{.Port}} {{.Address}}:{{.Port}} check port {{index .ServiceMeta "management-port"}} ssl verify none
+    {{else}}
+    server proxy-{{.Port}} {{.Address}}:{{.Port}} ssl verify none
+    {{end}}
+    {{end}}
+
+listen stats
+    bind *:18404
+    stats enable
+    stats uri /stats
+    stats refresh 10s
+

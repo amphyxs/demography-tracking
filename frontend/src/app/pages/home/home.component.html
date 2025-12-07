@@ -1,0 +1,335 @@
+<ng-container tuiTableFilters>
+  @if (!hideControls()) {
+  <div class="tui-space_bottom-3">
+    <button
+      tuiButton
+      size="m"
+      iconStart="@tui.plus"
+      type="button"
+      (click)="createNew()"
+    >
+      Create person
+    </button>
+  </div>
+  } @if (!hideControls()) {
+  <tui-accordion-item class="filters__accordion">
+    Filters
+    <ng-template tuiAccordionItemContent>
+      <form [formGroup]="filtersForm" class="filters__form">
+        <div class="filters__row">
+          <div class="filters__cell">
+            <label tuiChip [appearance]="filtersForm.value.idFilterMode === 'eq' ? 'accent' : 'neutral'">
+              Exact
+              <input
+                appearance=""
+                name="idFilterMode"
+                tuiChip
+                type="radio"
+                value="eq"
+                [ngModel]="filtersForm.value.idFilterMode"
+                [ngModelOptions]="{ standalone: true }"
+                (ngModelChange)="filtersForm.patchValue({ idFilterMode: $event })"
+              />
+            </label>
+            <label tuiChip [appearance]="filtersForm.value.idFilterMode === 'range' ? 'accent' : 'neutral'">
+              Range
+              <input
+                appearance=""
+                name="idFilterMode"
+                tuiChip
+                type="radio"
+                value="range"
+                [ngModel]="filtersForm.value.idFilterMode"
+                [ngModelOptions]="{ standalone: true }"
+                (ngModelChange)="filtersForm.patchValue({ idFilterMode: $event })"
+              />
+            </label>
+          </div>
+          @if (filtersForm.value.idFilterMode === 'eq') {
+            <tui-textfield class="filters__cell">
+              <label tuiLabel>ID (=)</label>
+              <input tuiTextfield formControlName="idEqValue" />
+            </tui-textfield>
+          } @else {
+            <tui-textfield class="filters__cell">
+              <label tuiLabel>ID (&lt;)</label>
+              <input tuiTextfield formControlName="idLtValue" placeholder="Less than" />
+            </tui-textfield>
+            <tui-textfield class="filters__cell">
+              <label tuiLabel>ID (&gt;)</label>
+              <input tuiTextfield formControlName="idGtValue" placeholder="Greater than" />
+            </tui-textfield>
+          }
+        </div>
+
+        <div class="filters__row">
+          <tui-textfield class="filters__cell">
+            <label tuiLabel>Name</label>
+            <input tuiTextfield formControlName="nameValue" />
+          </tui-textfield>
+        </div>
+
+        <div class="filters__row">
+          <div class="filters__cell">
+            <label tuiChip [appearance]="filtersForm.value.heightFilterMode === 'eq' ? 'accent' : 'neutral'">
+              Exact
+              <input
+                appearance=""
+                name="heightFilterMode"
+                tuiChip
+                type="radio"
+                value="eq"
+                [ngModel]="filtersForm.value.heightFilterMode"
+                [ngModelOptions]="{ standalone: true }"
+                (ngModelChange)="filtersForm.patchValue({ heightFilterMode: $event })"
+              />
+            </label>
+            <label tuiChip [appearance]="filtersForm.value.heightFilterMode === 'range' ? 'accent' : 'neutral'">
+              Range
+              <input
+                appearance=""
+                name="heightFilterMode"
+                tuiChip
+                type="radio"
+                value="range"
+                [ngModel]="filtersForm.value.heightFilterMode"
+                [ngModelOptions]="{ standalone: true }"
+                (ngModelChange)="filtersForm.patchValue({ heightFilterMode: $event })"
+              />
+            </label>
+          </div>
+          @if (filtersForm.value.heightFilterMode === 'eq') {
+            <tui-textfield class="filters__cell">
+              <label tuiLabel>Height (=)</label>
+              <input tuiTextfield formControlName="heightEqValue" />
+            </tui-textfield>
+          } @else {
+            <tui-textfield class="filters__cell">
+              <label tuiLabel>Height (&lt;)</label>
+              <input tuiTextfield formControlName="heightLtValue" placeholder="Less than" />
+            </tui-textfield>
+            <tui-textfield class="filters__cell">
+              <label tuiLabel>Height (&gt;)</label>
+              <input tuiTextfield formControlName="heightGtValue" placeholder="Greater than" />
+            </tui-textfield>
+          }
+        </div>
+
+        <div class="filters__row">
+          <div class="filters__cell">
+            <label tuiChip [appearance]="filtersForm.value.weightFilterMode === 'eq' ? 'accent' : 'neutral'">
+              Exact
+              <input
+                appearance=""
+                name="weightFilterMode"
+                tuiChip
+                type="radio"
+                value="eq"
+                [ngModel]="filtersForm.value.weightFilterMode"
+                [ngModelOptions]="{ standalone: true }"
+                (ngModelChange)="filtersForm.patchValue({ weightFilterMode: $event })"
+              />
+            </label>
+            <label tuiChip [appearance]="filtersForm.value.weightFilterMode === 'range' ? 'accent' : 'neutral'">
+              Range
+              <input
+                appearance=""
+                name="weightFilterMode"
+                tuiChip
+                type="radio"
+                value="range"
+                [ngModel]="filtersForm.value.weightFilterMode"
+                [ngModelOptions]="{ standalone: true }"
+                (ngModelChange)="filtersForm.patchValue({ weightFilterMode: $event })"
+              />
+            </label>
+          </div>
+          @if (filtersForm.value.weightFilterMode === 'eq') {
+            <tui-textfield class="filters__cell">
+              <label tuiLabel>Weight (=)</label>
+              <input tuiTextfield formControlName="weightEqValue" />
+            </tui-textfield>
+          } @else {
+            <tui-textfield class="filters__cell">
+              <label tuiLabel>Weight (&lt;)</label>
+              <input tuiTextfield formControlName="weightLtValue" placeholder="Less than" />
+            </tui-textfield>
+            <tui-textfield class="filters__cell">
+              <label tuiLabel>Weight (&gt;)</label>
+              <input tuiTextfield formControlName="weightGtValue" placeholder="Greater than" />
+            </tui-textfield>
+          }
+        </div>
+
+        <div class="filters__row">
+          <tui-textfield class="filters__cell" tuiChevron>
+            <input
+              tuiSelect
+              placeholder="Nationality"
+              formControlName="nationalityValue"
+            />
+            <tui-data-list-wrapper
+              *tuiTextfieldDropdown
+              new
+              [items]="['RUSSIA', 'CHINA', 'INDIA', 'ITALY', 'SOUTH_KOREA']"
+            />
+          </tui-textfield>
+        </div>
+
+        <div class="filters__row">
+          <div class="filters__cell">
+            <label tuiChip [appearance]="filtersForm.value.birthdayFilterMode === 'eq' ? 'accent' : 'neutral'">
+              Exact
+              <input
+                appearance=""
+                name="birthdayFilterMode"
+                tuiChip
+                type="radio"
+                value="eq"
+                [ngModel]="filtersForm.value.birthdayFilterMode"
+                [ngModelOptions]="{ standalone: true }"
+                (ngModelChange)="filtersForm.patchValue({ birthdayFilterMode: $event })"
+              />
+            </label>
+            <label tuiChip [appearance]="filtersForm.value.birthdayFilterMode === 'range' ? 'accent' : 'neutral'">
+              Range
+              <input
+                appearance=""
+                name="birthdayFilterMode"
+                tuiChip
+                type="radio"
+                value="range"
+                [ngModel]="filtersForm.value.birthdayFilterMode"
+                [ngModelOptions]="{ standalone: true }"
+                (ngModelChange)="filtersForm.patchValue({ birthdayFilterMode: $event })"
+              />
+            </label>
+          </div>
+          @if (filtersForm.value.birthdayFilterMode === 'eq') {
+            <tui-textfield class="filters__cell">
+              <label tuiLabel>Birthday (=)</label>
+              <input tuiInputDate formControlName="birthdayEqValue" />
+              <tui-calendar *tuiTextfieldDropdown />
+            </tui-textfield>
+          } @else {
+            <tui-textfield class="filters__cell">
+              <label tuiLabel>Birthday (&lt;) Before</label>
+              <input tuiInputDate formControlName="birthdayLtValue" placeholder="Before date" />
+              <tui-calendar *tuiTextfieldDropdown />
+            </tui-textfield>
+            <tui-textfield class="filters__cell">
+              <label tuiLabel>Birthday (&gt;) After</label>
+              <input tuiInputDate formControlName="birthdayGtValue" placeholder="After date" />
+              <tui-calendar *tuiTextfieldDropdown />
+            </tui-textfield>
+          }
+        </div>
+      </form>
+    </ng-template>
+  </tui-accordion-item>
+  }
+  <tui-loader
+    [overlay]="true"
+    [showLoader]="isLoading()"
+    class="table-container"
+  >
+    <table tuiTable class="table" [columns]="columns">
+      <thead>
+        <tr tuiThGroup>
+          @for (column of columns; track column) { @if (!hideControls() ||
+          column !== 'actions') {
+          <th
+            *tuiHead="column"
+            tuiTh
+            (click)="toggleSort(column, $event)"
+            [sorter]="null"
+          >
+            {{ columnNames[column] }}
+            @if (getSortMeta(column).direction) {
+            <span>
+              {{ getSortMeta(column).direction === 'asc' ? '↑' : '↓' }}
+              {{ getSortMeta(column).index }}
+            </span>
+            }
+          </th>
+          } }
+        </tr>
+      </thead>
+      <tbody tuiTbody [data]="data()">
+        <tr *ngFor="let item of data() | tuiTableFilters | async" tuiTr>
+          @for (column of personColumns; track column) {
+          <td *tuiCell="column" tuiTd>
+            {{ getCellValue(item, column) }}
+          </td>
+          } @if (!hideControls()) {
+          <td *tuiCell="'actions'" tuiTd>
+            <span tuiStatus>
+              <button
+                appearance="link"
+                iconStart="@tui.pencil"
+                size="xs"
+                tuiIconButton
+                type="button"
+                (click)="edit(item)"
+                [disabled]="
+                  !checkUserCanPerformActionWithPerson(
+                    actionWithPerson.Update,
+                    item
+                  )
+                "
+              >
+                Edit
+              </button>
+              <button
+                appearance="link"
+                iconStart="@tui.trash"
+                size="xs"
+                tuiIconButton
+                type="button"
+                (click)="remove(item)"
+                [disabled]="
+                  !checkUserCanPerformActionWithPerson(
+                    actionWithPerson.Delete,
+                    item
+                  )
+                "
+              >
+                Remove
+              </button>
+              <button
+                appearance="link"
+                iconStart="@tui.eye"
+                size="xs"
+                tuiIconButton
+                type="button"
+                (click)="view(item)"
+                [disabled]="
+                  !checkUserCanPerformActionWithPerson(
+                    actionWithPerson.Read,
+                    item
+                  )
+                "
+              >
+                View
+              </button>
+            </span>
+          </td>
+          }
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td [colSpan]="columns.length">
+            <tui-table-pagination
+              class="tui-space_top-2"
+              [page]="page()"
+              [size]="pageSize()"
+              [total]="totalItems()"
+              (paginationChange)="onPaginationChange($event)"
+            />
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </tui-loader>
+</ng-container>

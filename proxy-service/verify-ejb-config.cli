@@ -1,0 +1,57 @@
+# CLI скрипт для проверки конфигурации EJB в WildFly 30.0.0
+# Использование: $WILDFLY_HOME/bin/jboss-cli.sh --connect --file=verify-ejb-config.cli
+
+connect
+
+echo "========================================="
+echo "WildFly Version Check"
+echo "========================================="
+:read-attribute(name=release-version)
+:read-attribute(name=release-codename)
+
+echo ""
+echo "========================================="
+echo "EJB3 Subsystem Configuration"
+echo "========================================="
+/subsystem=ejb3:read-resource
+
+echo ""
+echo "========================================="
+echo "SLSB Pool Configuration"
+echo "========================================="
+/subsystem=ejb3/strict-max-bean-instance-pool=slsb-strict-max-pool:read-resource(include-runtime=true)
+
+echo ""
+echo "========================================="
+echo "All EJB Pools"
+echo "========================================="
+/subsystem=ejb3:read-children-names(child-type=strict-max-bean-instance-pool)
+
+echo ""
+echo "========================================="
+echo "EJB Statistics Enabled"
+echo "========================================="
+/subsystem=ejb3:read-attribute(name=statistics-enabled)
+
+echo ""
+echo "========================================="
+echo "Current Deployments"
+echo "========================================="
+deployment-info
+
+echo ""
+echo "========================================="
+echo "Socket Bindings (Ports)"
+echo "========================================="
+/socket-binding-group=standard-sockets/socket-binding=http:read-attribute(name=port)
+/socket-binding-group=standard-sockets/socket-binding=https:read-attribute(name=port)
+/socket-binding-group=standard-sockets/socket-binding=management-http:read-attribute(name=port)
+
+echo ""
+echo "========================================="
+echo "Remoting Connector"
+echo "========================================="
+/subsystem=remoting/http-connector=http-remoting-connector:read-resource
+
+echo ""
+echo "Configuration verification completed!"

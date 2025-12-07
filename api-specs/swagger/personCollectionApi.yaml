@@ -1,0 +1,529 @@
+openapi: 3.0.3
+info:
+  title: SOA Lab 1
+  description: Вариант 8602. Алексей Волков & Сандов Кирилл.
+  version: 1.0.0
+
+tags:
+  - name: central-service
+  - name: proxy-service
+
+servers:
+  - url: https://localhost:28444/central-service/api
+    description: central-service
+  - url: https://localhost:8444/api/proxy
+    description: proxy-service
+
+paths:
+  /persons:
+    get:
+      tags:
+        - central-service
+      summary: Получить список людей
+      description: |
+        Возвращает список людей с поддержкой:
+        - **Фильтрации** по одному или нескольким полям с операциями равенства и диапазона (<, >)
+        - **Сортировки** по одному или нескольким полям
+        - **Постраничного вывода** результатов
+
+        ### Примеры использования фильтрации:
+        - `/persons?height[gt]=180` — рост больше 180
+        - `/persons?weight[lt]=90` — вес меньше 90
+        - `/persons?name=John` — имя равно "John"
+        - `/persons?height[gt]=170&weight[lt]=80&name=Alice` — комбинированная фильтрация
+
+        ### Примеры сортировки:
+        - `/persons?sort=name,asc&sort=height,desc`
+
+        ### Пример комбинированного запроса (фильтрация + сортировка):
+        - `/persons?height[gt]=170&weight[lt]=80&name=Alice&sort=name,asc&sort=height,desc`
+
+      operationId: getPersons
+      parameters:
+        # Пагинация
+        - name: page
+          in: query
+          description: Номер страницы (нумерация начинается с 0)
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+          example: 0
+
+        - name: size
+          in: query
+          description: Количество элементов на странице
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+          example: 20
+
+        # Сортировка
+        - name: sort
+          in: query
+          description: |
+            Параметры сортировки в формате: `поле,направление`.
+
+            Можно указать несколько параметров `sort` для многоуровневой сортировки.
+
+            **Доступные поля:**
+            - `id`
+            - `name`
+            - `coordinates.x`
+            - `coordinates.y`
+            - `height`
+            - `birthday`
+            - `weight`
+            - `nationality`
+            - `location.x`
+            - `location.y`
+            - `location.name`
+
+            **Направления:**
+            - `asc` — по возрастанию
+            - `desc` — по убыванию
+
+            **Примеры:**
+            - `sort=name,asc`
+            - `sort=height,desc`
+            - `sort=name,asc&sort=height,desc`
+            - `sort=coordinates.x,desc&sort=location.name,asc`
+          style: form
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+              pattern: "^[a-zA-Z.]+,(asc|desc)$"
+          examples:
+            single:
+              summary: Одиночная сортировка
+              value: ["name,asc"]
+            multiple:
+              summary: Множественная сортировка
+              value: ["name,asc", "height,desc"]
+
+        # Фильтрация (равенство и диапазон)
+        - name: id
+          in: query
+          description: Фильтр по ID (равенство)
+          schema:
+            type: integer
+
+        - name: id[lt]
+          in: query
+          description: Фильтр по ID (меньше)
+          schema:
+            type: integer
+
+        - name: id[gt]
+          in: query
+          description: Фильтр по ID (больше)
+          schema:
+            type: integer
+
+        - name: name
+          in: query
+          description: Фильтр по имени (равенство)
+          schema:
+            type: string
+
+        - name: height
+          in: query
+          description: Фильтр по росту (равенство)
+          schema:
+            type: number
+
+        - name: height[lt]
+          in: query
+          description: Фильтр по росту (меньше)
+          schema:
+            type: number
+
+        - name: height[gt]
+          in: query
+          description: Фильтр по росту (больше)
+          schema:
+            type: number
+
+        - name: weight
+          in: query
+          description: Фильтр по весу (равенство)
+          schema:
+            type: number
+
+        - name: weight[lt]
+          in: query
+          description: Фильтр по весу (меньше)
+          schema:
+            type: number
+
+        - name: weight[gt]
+          in: query
+          description: Фильтр по весу (больше)
+          schema:
+            type: number
+
+        - name: nationality
+          in: query
+          description: Фильтр по национальности (равенство)
+          schema:
+            type: string
+            enum:
+              - RUSSIA
+              - CHINA
+              - INDIA
+              - ITALY
+              - SOUTH_KOREA
+
+        - name: birthday
+          in: query
+          description: Фильтр по дате рождения (равенство, формат yyyy-MM-dd)
+          schema:
+            type: string
+            format: date
+
+        - name: birthday[lt]
+          in: query
+          description: Фильтр по дате рождения (раньше)
+          schema:
+            type: string
+            format: date
+
+        - name: birthday[gt]
+          in: query
+          description: Фильтр по дате рождения (позже)
+          schema:
+            type: string
+            format: date
+
+      responses:
+        "200":
+          description: Список людей
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PersonsResponse"
+        "400":
+          description: Неверные параметры запроса
+
+    post:
+      tags:
+        - central-service
+      summary: Добавить нового человека
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PersonCreateRequest"
+      responses:
+        "201":
+          description: Созданный объект
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Person"
+        "400": { description: Неверный формат запроса }
+
+  /persons/{id}:
+    get:
+      tags:
+        - central-service
+      summary: Получить человека по ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Найденный человек
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Person"
+        "400": { description: Неверный ID }
+        "404": { description: Не найден }
+
+    put:
+      tags:
+        - central-service
+      summary: Обновить человека по ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PersonCreateRequest"
+      responses:
+        "200":
+          description: Обновлённый объект
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Person"
+        "400": { description: Неверные данные запроса }
+        "404": { description: Не найден }
+
+    delete:
+      tags:
+        - central-service
+      summary: Удалить человека по ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204": { description: Удалено }
+        "400": { description: Неверный ID }
+        "404": { description: Не найден }
+
+  /persons/average-weight:
+    get:
+      tags:
+        - central-service
+      summary: Средний вес
+      responses:
+        "200":
+          description: Среднее значение
+          content:
+            application/json:
+              schema:
+                type: number
+                format: double
+        "500": { description: Внутренняя ошибка сервера }
+
+  /persons/count-by-location:
+    get:
+      tags:
+        - central-service
+      summary: Количество людей по location
+      parameters:
+        - name: x
+          in: query
+          schema:
+            type: number
+        - name: y
+          in: query
+          schema:
+            type: integer
+        - name: name
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Количество найденных
+          content:
+            application/json:
+              schema:
+                type: integer
+        "400": { description: Неверные параметры запроса }
+
+  /persons/by-height:
+    get:
+      tags:
+        - central-service
+      summary: Люди выше заданного роста
+      parameters:
+        - name: minHeight
+          in: query
+          required: true
+          schema:
+            type: number
+      responses:
+        "200":
+          description: Список найденных людей
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Person"
+        "400": { description: minHeight обязателен и должен быть числом }
+        "500": { description: Внутренняя ошибка сервера }
+
+  /demography/hair-color/{hairColor}:
+    servers:
+      - url: https://localhost:8444/api/proxy
+        description: proxy-service
+    get:
+      tags:
+        - proxy-service
+      summary: Количество людей по цвету волос
+      parameters:
+        - name: hairColor
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Количество людей
+          content:
+            application/json:
+              schema:
+                type: integer
+        "400": { description: Неверный цвет волос }
+
+  /demography/nationality/{nationality}/eye-color/{eyeColor}/percentage:
+    servers:
+      - url: https://localhost:8444/api/proxy
+        description: proxy-service
+    get:
+      tags:
+        - proxy-service
+      summary: Доля людей по цвету глаз и национальности
+      parameters:
+        - name: nationality
+          in: path
+          required: true
+          schema:
+            type: string
+            enum:
+              - RUSSIA
+              - CHINA
+              - INDIA
+              - ITALY
+              - SOUTH_KOREA
+        - name: eyeColor
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Процент людей
+          content:
+            application/json:
+              schema:
+                type: number
+                format: double
+        "400": { description: Неверные значения параметров }
+
+components:
+  schemas:
+    PersonsResponse:
+      type: object
+      properties:
+        persons:
+          type: array
+          items:
+            $ref: "#/components/schemas/Person"
+        size:
+          type: integer
+          description: Общее количество людей в ответе
+
+    Person:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        coordinates:
+          $ref: "#/components/schemas/Coordinates"
+        creationDate:
+          type: string
+          format: date-time
+        height:
+          type: number
+        birthday:
+          type: string
+          format: date
+        weight:
+          type: number
+          nullable: true
+        eyeColor:
+          $ref: "#/components/schemas/Color"
+        hairColor:
+          $ref: "#/components/schemas/Color"
+        nationality:
+          $ref: "#/components/schemas/Country"
+        location:
+          $ref: "#/components/schemas/Location"
+
+    PersonCreateRequest:
+      type: object
+      required:
+        - name
+        - coordinates
+        - height
+        - birthday
+        - nationality
+        - location
+      properties:
+        name:
+          type: string
+        coordinates:
+          $ref: "#/components/schemas/Coordinates"
+        height:
+          type: number
+        birthday:
+          type: string
+          format: date
+        weight:
+          type: number
+          nullable: true
+        nationality:
+          $ref: "#/components/schemas/Country"
+        location:
+          $ref: "#/components/schemas/Location"
+
+    Coordinates:
+      type: object
+      required:
+        - x
+        - y
+      properties:
+        x:
+          type: number
+        y:
+          type: number
+
+    Location:
+      type: object
+      required:
+        - y
+        - name
+      properties:
+        x:
+          type: number
+        y:
+          type: integer
+        name:
+          type: string
+
+    Country:
+      type: string
+      enum:
+        - RUSSIA
+        - CHINA
+        - INDIA
+        - ITALY
+        - SOUTH_KOREA
+
+    Color:
+      type: string
+      enum:
+        - BLUE
+        - GREEN
+        - BROWN
+        - GRAY
+        - HAZEL
+        - BLONDE
+        - BRUNETTE
+        - BLACK
+        - RED

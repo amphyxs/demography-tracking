@@ -1,0 +1,130 @@
+<tui-root>
+  <header tuiNavigationHeader>
+    <span tuiNavigationLogo>
+      <span tuiFade>Админка Военкома</span>
+    </span>
+  </header>
+  <div [style.display]="'flex'">
+    <aside [tuiNavigationAside]="expanded">
+      @if (expanded) {
+      <p tuiAsideItem>Специальные команды:</p>
+      }
+      <button
+        iconStart="@tui.weight"
+        tuiAsideItem
+        type="button"
+        (click)="showAverageWeight()"
+      >
+        Средний вес
+      </button>
+      <button
+        iconStart="@tui.map-pin"
+        tuiAsideItem
+        type="button"
+        (click)="openCountByLocationDialog(countByLocationDialog)"
+      >
+        Количество по местоположению
+      </button>
+      <button
+        iconStart="@tui.ruler"
+        tuiAsideItem
+        type="button"
+        (click)="openByMinHeightDialog(byMinHeightDialog)"
+      >
+        Люди высше заданного роста
+      </button>
+      <button
+        iconStart="@tui.paintbrush"
+        tuiAsideItem
+        type="button"
+        (click)="openHairColorDialog(hairColorDialog)"
+      >
+        Количество людей по цвету волос
+      </button>
+      <button
+        iconStart="@tui.eye"
+        tuiAsideItem
+        type="button"
+        (click)="openEyesNationalityDialog(eyesNationalityDialog)"
+      >
+        Доля людей по цвету глаз и национальности
+      </button>
+      <footer>
+        <button
+          tuiAsideItem
+          type="button"
+          [iconStart]="expanded ? '@tui.chevron-left' : '@tui.chevron-right'"
+          (click)="expanded = !expanded"
+        >
+          {{ expanded ? 'Развернуть' : 'Свернуть' }}
+        </button>
+      </footer>
+    </aside>
+    <main tuiNavigationMain>
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+
+  <ng-template #countByLocationDialog let-observer>
+    <tui-textfield class="tui-space_bottom-3">
+      <label tuiLabel>X</label>
+      <input tuiTextfield [formControl]="locationXControl" />
+    </tui-textfield>
+    <tui-textfield class="tui-space_bottom-3">
+      <label tuiLabel>Y</label>
+      <input tuiTextfield [formControl]="locationYControl" />
+    </tui-textfield>
+    <tui-textfield class="tui-space_bottom-3">
+      <label tuiLabel>Имя локации</label>
+      <input tuiTextfield [formControl]="locationNameControl" />
+    </tui-textfield>
+    <button tuiButton type="button" (click)="showCountByLocation(observer)">
+      Посчитать
+    </button>
+  </ng-template>
+
+  <ng-template #hairColorDialog let-context>
+    <tui-textfield class="tui-space_bottom-3">
+      <label tuiLabel>Цвет волос</label>
+      <input tuiTextfield [formControl]="hairColorControl" />
+    </tui-textfield>
+    <button tuiButton type="button" (click)="showCountByHairColor(context)">
+      Посчитать
+    </button>
+  </ng-template>
+
+  <ng-template #eyesNationalityDialog let-context>
+    <tui-textfield class="tui-space_bottom-3">
+      <label tuiLabel>Национальность</label>
+      <input tuiTextfield [formControl]="nationalityControl" />
+    </tui-textfield>
+    <tui-textfield class="tui-space_bottom-3">
+      <label tuiLabel>Цвет глаз</label>
+      <input tuiTextfield [formControl]="eyeColorControl" />
+    </tui-textfield>
+    <button
+      tuiButton
+      type="button"
+      (click)="showEyesNationalityPercentage(context)"
+    >
+      Посчитать
+    </button>
+  </ng-template>
+
+  <ng-template #byMinHeightDialog let-context>
+    <tui-textfield class="tui-space_bottom-3">
+      <label tuiLabel>Минимальный рост</label>
+      <input tuiTextfield [formControl]="minHeightControl" />
+    </tui-textfield>
+    <button tuiButton type="button" (click)="showByMinHeight(context)">
+      Показать
+    </button>
+  </ng-template>
+
+  <ng-template #dragonsTable let-context>
+    <app-home
+      [inputData]="foundPersonsByName()"
+      [hideControls]="true"
+    ></app-home>
+  </ng-template>
+</tui-root>

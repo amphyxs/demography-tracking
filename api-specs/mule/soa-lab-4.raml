@@ -1,0 +1,421 @@
+#%RAML 1.0
+title: SOA Lab Services API
+version: v1
+baseUri: https://localhost/soa-services
+protocols: [ HTTPS ]
+
+description: |
+  Complete API specification for SOA Laboratory project including:
+  - Central Service (SOAP-based person management)
+  - Proxy Service (REST-based demographic analytics)
+  
+  All service specifications are defined in this single RAML file for simplicity.
+
+documentation:
+  - title: Overview
+    content: |
+      This API specification covers two microservices:
+      
+      1. **Central Service** (SOAP/HTTPS on port 28444)
+         - Person entity CRUD operations
+         - Demographic queries and statistics
+         - WSDL-based SOAP service
+         - Base URL: https://localhost:28444/central-service/ws
+         - WSDL: https://localhost:28444/central-service/ws/persons.wsdl
+      
+      2. **Proxy Service** (REST/HTTPS on port 28450)
+         - Demographic analysis proxy
+         - Hair color statistics
+         - Nationality and eye color percentage calculations
+         - Base URL: https://localhost:28450/api/proxy
+      
+      Both services use HTTPS and are registered with Consul for service discovery.
+  
+  - title: Service Architecture
+    content: |
+      **Central Service (SOAP)**
+      - Technology: Spring Boot with Spring Web Services
+      - Protocol: SOAP 1.1
+      - Database: PostgreSQL
+      - Port: 28444 (HTTPS)
+      - Health Check: http://localhost:8081/actuator/health
+      
+      **Proxy Service (REST)**
+      - Technology: Spring Boot REST
+      - Protocol: HTTP/REST with JSON
+      - Communication: Remote EJB calls to backend services
+      - Port: 28450 (HTTPS)
+      - Health Check: http://localhost:8097/actuator/health
+
+types:
+  Country:
+    type: string
+    enum: [ RUSSIA, CHINA, INDIA, ITALY, SOUTH_KOREA ]
+    description: Country enumeration
+    
+  HairColor:
+    type: string
+    enum: [ BLONDE, BRUNETTE, BROWN, RED, BLACK, GRAY, WHITE ]
+    description: Hair color enumeration
+    
+  EyeColor:
+    type: string
+    enum: [ BROWN, BLUE, GREEN, GRAY, BLACK, AMBER, HAZEL ]
+    description: Eye color enumeration
+    
+  Coordinates:
+    type: object
+    properties:
+      x: 
+        type: number
+        format: double
+        required: true
+        description: X coordinate (double precision)
+      y: 
+        type: integer
+        format: int32
+        required: true
+        description: Y coordinate (integer)
+    description: Geographic coordinates
+    
+  Location:
+    type: object
+    properties:
+      x: 
+        type: number
+        format: float
+        required: false
+        description: X coordinate (float precision)
+      y: 
+        type: integer
+        format: int32
+        required: true
+        description: Y coordinate (integer)
+      name: 
+        type: string
+        required: false
+        description: Location name
+    description: Location information
+    
+  Person:
+    type: object
+    properties:
+      id: 
+        type: integer
+        format: int32
+        required: false
+        description: Auto-generated ID
+      name: 
+        type: string
+        required: true
+        minLength: 1
+        description: Person name (non-empty)
+      coordinates: 
+        type: Coordinates
+        required: true
+        description: Person coordinates
+      creationDate: 
+        type: datetime
+        required: false
+        description: Auto-generated creation timestamp
+      height: 
+        type: number
+        format: double
+        required: true
+        minimum: 0
+        description: Person height in cm (double precision)
+      birthday: 
+        type: date-only
+        required: true
+        description: Person birth date
+      weight: 
+        type: integer
+        format: int64
+        required: false
+        minimum: 0
+        description: Person weight in kg (long integer)
+      nationality: 
+        type: Country
+        required: true
+        description: Person nationality
+      location: 
+        type: Location
+        required: true
+        description: Person location
+      hairColor: 
+        type: HairColor
+        required: false
+        description: Person hair color (optional)
+      eyeColor: 
+        type: EyeColor
+        required: false
+        description: Person eye color (optional)
+    description: Person entity
+  
+  ErrorResponse:
+    type: object
+    properties:
+      timestamp:
+        type: datetime
+        required: false
+        description: Error timestamp in ISO format
+      status:
+        type: integer
+        format: int32
+        required: false
+        description: HTTP status code
+      error:
+        type: string
+        required: false
+        description: Error type description
+      message:
+        type: string
+        required: false
+        description: Detailed error message
+      path:
+        type: string
+        required: false
+        description: Request path that caused the error
+    description: Standard error response format
+
+traits:
+  secured:
+    description: This endpoint requires HTTPS
+    usage: Apply to all endpoints that require secure communication
+    
+  errorHandling:
+    description: Standard error handling
+    responses:
+      500:
+        description: Internal Server Error
+        body:
+          application/json:
+            type: ErrorResponse
+
+/central-service:
+  displayName: Central SOAP Service
+  description: |
+    SOAP-based person management service.
+    
+    **Endpoint**: https://localhost:28444/central-service/ws
+    **WSDL**: https://localhost:28444/central-service/ws/persons.wsdl
+    **Protocol**: SOAP 1.1
+    
+    See central-service-soap.raml for complete specification.
+    
+    Available Operations:
+    - GetPersons - Retrieve persons with filtering and pagination
+    - CreatePerson - Create new person
+    - GetPersonById - Get person by ID
+    - UpdatePerson - Update existing person
+    - DeletePerson - Delete person
+    - GetAverageWeight - Calculate average weight
+    - CountByLocation - Count by location
+    - GetPersonsByHeight - Filter by height
+    - CountByHairColor - Count by hair color
+    - GetPercentageByNationalityAndEyeColor - Calculate demographic percentage
+
+/proxy-service:
+  displayName: Proxy REST Service
+  description: |
+    REST-based demographic analytics proxy service.
+    
+    **Endpoint**: https://localhost:28450/api/proxy
+    **Protocol**: REST/JSON
+    
+    This service uses fragments from MuleSoft Exchange for standardized API design.
+  
+  /demography:
+    displayName: Demography Analytics
+    description: Demographic analysis endpoints using components from Exchange fragment
+    
+    /hair-color/{hairColor}:
+      displayName: Count By Hair Color
+      description: Get count of persons with specific hair color
+      
+      uriParameters:
+        hairColor:
+          type: string
+          required: true
+          description: Hair color value
+          enum: [ BLONDE, BRUNETTE, BROWN, RED, BLACK, GRAY, WHITE ]
+          example: BROWN
+      
+      options:
+        description: CORS preflight request
+        responses:
+          200:
+            description: CORS headers
+            headers:
+              Access-Control-Allow-Origin:
+                type: string
+                example: "*"
+              Access-Control-Allow-Methods:
+                type: string
+                example: "GET, OPTIONS"
+              Access-Control-Allow-Headers:
+                type: string
+                example: "Content-Type, Authorization"
+          
+      get:
+        is: [ errorHandling ]
+        description: |
+          Retrieves the count of persons who have the specified hair color.
+          
+          This endpoint proxies the request to the central service's SOAP operation
+          CountByHairColor and returns the result as JSON.
+          
+        responses:
+          200:
+            description: Successful response with count
+            body:
+              application/json:
+                type: integer
+                format: int64
+                example: 42
+                
+          400:
+            description: Invalid hair color value
+            body:
+              application/json:
+                type: ErrorResponse
+                example:
+                  timestamp: "2025-11-15T10:30:00.000+00:00"
+                  status: 400
+                  error: "Bad Request"
+                  message: "Invalid hair color: INVALID"
+                  path: "/api/proxy/demography/hair-color/INVALID"
+    
+    /nationality/{nationality}/eye-color/{eyeColor}/percentage:
+      displayName: Get Percentage By Nationality And Eye Color
+      description: Calculate percentage of persons with specific nationality and eye color
+      
+      uriParameters:
+        nationality:
+          type: string
+          required: true
+          description: Nationality/Country value
+          enum: [ RUSSIA, CHINA, INDIA, ITALY, SOUTH_KOREA ]
+          example: RUSSIA
+          
+        eyeColor:
+          type: string
+          required: true
+          description: Eye color value
+          enum: [ BROWN, BLUE, GREEN, GRAY, BLACK, AMBER, HAZEL ]
+          example: BLUE
+      
+      options:
+        description: CORS preflight request
+        responses:
+          200:
+            description: CORS headers
+            headers:
+              Access-Control-Allow-Origin:
+                type: string
+                example: "*"
+              Access-Control-Allow-Methods:
+                type: string
+                example: "GET, OPTIONS"
+              Access-Control-Allow-Headers:
+                type: string
+                example: "Content-Type, Authorization"
+          
+      get:
+        is: [ errorHandling ]
+        description: |
+          Calculates the percentage of persons who have both the specified nationality
+          and eye color relative to all persons.
+          
+          This endpoint proxies the request to the central service's SOAP operation
+          GetPercentageByNationalityAndEyeColor and returns the result as JSON.
+          
+          Formula: (count of persons with nationality AND eye color) / (total persons) * 100
+          
+        responses:
+          200:
+            description: Successful response with percentage
+            body:
+              application/json:
+                type: number
+                format: double
+                example: 15.75
+                description: Percentage value (0.0 to 100.0)
+                
+          400:
+            description: Invalid nationality or eye color value
+            body:
+              application/json:
+                type: ErrorResponse
+                example:
+                  timestamp: "2025-11-15T10:30:00.000+00:00"
+                  status: 400
+                  error: "Bad Request"
+                  message: "Invalid nationality or eye color"
+                  path: "/api/proxy/demography/nationality/INVALID/eye-color/BLUE/percentage"
+  
+  /health:
+    displayName: Health Check
+    description: |
+      Actuator health endpoint (available on management port 8097 without SSL)
+      URL: http://localhost:8097/actuator/health
+    
+    options:
+      description: CORS preflight request
+      responses:
+        200:
+          description: CORS headers
+          headers:
+            Access-Control-Allow-Origin:
+              type: string
+              example: "*"
+            Access-Control-Allow-Methods:
+              type: string
+              example: "GET, OPTIONS"
+            Access-Control-Allow-Headers:
+              type: string
+              example: "Content-Type, Authorization"
+      
+    get:
+      description: Check service health status
+      responses:
+        200:
+          description: Service is healthy
+          body:
+            application/json:
+              example:
+                status: "UP"
+  
+  /info:
+    displayName: Service Info
+    description: |
+      Actuator info endpoint (available on management port 8097 without SSL)
+      URL: http://localhost:8097/actuator/info
+    
+    options:
+      description: CORS preflight request
+      responses:
+        200:
+          description: CORS headers
+          headers:
+            Access-Control-Allow-Origin:
+              type: string
+              example: "*"
+            Access-Control-Allow-Methods:
+              type: string
+              example: "GET, OPTIONS"
+            Access-Control-Allow-Headers:
+              type: string
+              example: "Content-Type, Authorization"
+      
+    get:
+      description: Get service information
+      responses:
+        200:
+          description: Service information
+          body:
+            application/json:
+              example:
+                app:
+                  name: "proxy-service"
+                  version: "0.0.1-SNAPSHOT"

@@ -1,0 +1,552 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:soapui-project id="76a330d3-3e03-412a-9402-933d8eadb2e2" activeEnvironment="Default" name="soa-lab-4" resourceRoot="" soapui-version="5.7.0" xmlns:con="http://eviware.com/soapui/config"><con:settings/><con:interface xsi:type="con:WsdlInterface" id="1176946a-aa6e-437f-be49-a070278c50e4" wsaVersion="NONE" name="PersonsPortSoap11" type="wsdl" bindingName="{http://centralservicespring.assistant.com/persons}PersonsPortSoap11" soapVersion="1_1" anonymous="optional" definition="https://localhost:28444/central-service/ws/persons.wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="https://localhost:28444/central-service/ws/persons.wsdl"><con:part><con:url>https://localhost:28444/central-service/ws/persons.wsdl</con:url><con:content><![CDATA[<wsdl:definitions targetNamespace="http://centralservicespring.assistant.com/persons" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:sch="http://centralservicespring.assistant.com/persons" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://centralservicespring.assistant.com/persons">
+  <wsdl:types>
+    <xs:schema elementFormDefault="qualified" targetNamespace="http://centralservicespring.assistant.com/persons" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:simpleType name="Country">
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="RUSSIA"/>
+          <xs:enumeration value="CHINA"/>
+          <xs:enumeration value="INDIA"/>
+          <xs:enumeration value="ITALY"/>
+          <xs:enumeration value="SOUTH_KOREA"/>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="HairColor">
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="BLACK"/>
+          <xs:enumeration value="BLUE"/>
+          <xs:enumeration value="YELLOW"/>
+          <xs:enumeration value="ORANGE"/>
+          <xs:enumeration value="BROWN"/>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="EyeColor">
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="GREEN"/>
+          <xs:enumeration value="BLUE"/>
+          <xs:enumeration value="YELLOW"/>
+          <xs:enumeration value="ORANGE"/>
+          <xs:enumeration value="BROWN"/>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:complexType name="Coordinates">
+        <xs:sequence>
+          <xs:element name="x" type="xs:double"/>
+          <xs:element name="y" type="xs:int"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="Location">
+        <xs:sequence>
+          <xs:element name="x" nillable="true" type="xs:float"/>
+          <xs:element name="y" type="xs:int"/>
+          <xs:element name="name" nillable="true" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="Person">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="id" type="xs:int"/>
+          <xs:element name="name" type="xs:string"/>
+          <xs:element name="coordinates" type="tns:Coordinates"/>
+          <xs:element minOccurs="0" name="creationDate" type="xs:dateTime"/>
+          <xs:element name="height" type="xs:double"/>
+          <xs:element name="birthday" type="xs:date"/>
+          <xs:element name="weight" nillable="true" type="xs:long"/>
+          <xs:element name="nationality" type="tns:Country"/>
+          <xs:element name="location" type="tns:Location"/>
+          <xs:element name="hairColor" nillable="true" type="tns:HairColor"/>
+          <xs:element name="eyeColor" nillable="true" type="tns:EyeColor"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="GetPersonsRequest">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element default="0" name="page" type="xs:int"/>
+            <xs:element default="20" name="size" type="xs:int"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="sort" type="xs:string"/>
+            <xs:element minOccurs="0" name="id" type="xs:int"/>
+            <xs:element minOccurs="0" name="name" type="xs:string"/>
+            <xs:element minOccurs="0" name="height" type="xs:double"/>
+            <xs:element minOccurs="0" name="weight" type="xs:long"/>
+            <xs:element minOccurs="0" name="nationality" type="xs:string"/>
+            <xs:element minOccurs="0" name="birthday" type="xs:string"/>
+            <xs:element minOccurs="0" name="idLt" type="xs:int"/>
+            <xs:element minOccurs="0" name="idGt" type="xs:int"/>
+            <xs:element minOccurs="0" name="heightLt" type="xs:double"/>
+            <xs:element minOccurs="0" name="heightGt" type="xs:double"/>
+            <xs:element minOccurs="0" name="weightLt" type="xs:long"/>
+            <xs:element minOccurs="0" name="weightGt" type="xs:long"/>
+            <xs:element minOccurs="0" name="birthdayLt" type="xs:string"/>
+            <xs:element minOccurs="0" name="birthdayGt" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetPersonsResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="persons" type="tns:Person"/>
+            <xs:element name="totalCount" type="xs:int"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="CreatePersonRequest">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="person" type="tns:Person"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="CreatePersonResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="person" type="tns:Person"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetPersonByIdRequest">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="id" type="xs:int"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetPersonByIdResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="person" type="tns:Person"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="UpdatePersonRequest">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="id" type="xs:int"/>
+            <xs:element name="person" type="tns:Person"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="UpdatePersonResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="person" type="tns:Person"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="DeletePersonRequest">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="id" type="xs:int"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="DeletePersonResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="success" type="xs:boolean"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetAverageWeightRequest">
+        <xs:complexType>
+          <xs:sequence/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetAverageWeightResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="averageWeight" type="xs:double"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="CountByLocationRequest">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="x" type="xs:float"/>
+            <xs:element minOccurs="0" name="y" type="xs:int"/>
+            <xs:element minOccurs="0" name="name" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="CountByLocationResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="count" type="xs:int"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetPersonsByHeightRequest">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="minHeight" type="xs:double"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetPersonsByHeightResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="persons" type="tns:Person"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="CountByHairColorRequest">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="hairColor" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="CountByHairColorResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="count" type="xs:long"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetPercentageByNationalityAndEyeColorRequest">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="nationality" type="xs:string"/>
+            <xs:element name="eyeColor" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetPercentageByNationalityAndEyeColorResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="percentage" type="xs:double"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="ServiceFault">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="message" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:schema>
+  </wsdl:types>
+  <wsdl:message name="GetPercentageByNationalityAndEyeColorRequest">
+    <wsdl:part element="tns:GetPercentageByNationalityAndEyeColorRequest" name="GetPercentageByNationalityAndEyeColorRequest"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="CreatePersonRequest">
+    <wsdl:part element="tns:CreatePersonRequest" name="CreatePersonRequest"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="CountByHairColorResponse">
+    <wsdl:part element="tns:CountByHairColorResponse" name="CountByHairColorResponse"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="DeletePersonRequest">
+    <wsdl:part element="tns:DeletePersonRequest" name="DeletePersonRequest"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="CreatePersonResponse">
+    <wsdl:part element="tns:CreatePersonResponse" name="CreatePersonResponse"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="GetPersonByIdResponse">
+    <wsdl:part element="tns:GetPersonByIdResponse" name="GetPersonByIdResponse"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="UpdatePersonResponse">
+    <wsdl:part element="tns:UpdatePersonResponse" name="UpdatePersonResponse"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="CountByHairColorRequest">
+    <wsdl:part element="tns:CountByHairColorRequest" name="CountByHairColorRequest"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="CountByLocationResponse">
+    <wsdl:part element="tns:CountByLocationResponse" name="CountByLocationResponse"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="GetPersonsByHeightResponse">
+    <wsdl:part element="tns:GetPersonsByHeightResponse" name="GetPersonsByHeightResponse"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="CountByLocationRequest">
+    <wsdl:part element="tns:CountByLocationRequest" name="CountByLocationRequest"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="GetPersonsByHeightRequest">
+    <wsdl:part element="tns:GetPersonsByHeightRequest" name="GetPersonsByHeightRequest"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="GetAverageWeightRequest">
+    <wsdl:part element="tns:GetAverageWeightRequest" name="GetAverageWeightRequest"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="DeletePersonResponse">
+    <wsdl:part element="tns:DeletePersonResponse" name="DeletePersonResponse"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="GetPersonsRequest">
+    <wsdl:part element="tns:GetPersonsRequest" name="GetPersonsRequest"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="GetPersonsResponse">
+    <wsdl:part element="tns:GetPersonsResponse" name="GetPersonsResponse"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="GetAverageWeightResponse">
+    <wsdl:part element="tns:GetAverageWeightResponse" name="GetAverageWeightResponse"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="GetPersonByIdRequest">
+    <wsdl:part element="tns:GetPersonByIdRequest" name="GetPersonByIdRequest"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="UpdatePersonRequest">
+    <wsdl:part element="tns:UpdatePersonRequest" name="UpdatePersonRequest"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="ServiceFault">
+    <wsdl:part element="tns:ServiceFault" name="ServiceFault"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="GetPercentageByNationalityAndEyeColorResponse">
+    <wsdl:part element="tns:GetPercentageByNationalityAndEyeColorResponse" name="GetPercentageByNationalityAndEyeColorResponse"></wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="PersonsPort">
+    <wsdl:operation name="GetPercentageByNationalityAndEyeColor">
+      <wsdl:input message="tns:GetPercentageByNationalityAndEyeColorRequest" name="GetPercentageByNationalityAndEyeColorRequest"></wsdl:input>
+      <wsdl:output message="tns:GetPercentageByNationalityAndEyeColorResponse" name="GetPercentageByNationalityAndEyeColorResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreatePerson">
+      <wsdl:input message="tns:CreatePersonRequest" name="CreatePersonRequest"></wsdl:input>
+      <wsdl:output message="tns:CreatePersonResponse" name="CreatePersonResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CountByHairColor">
+      <wsdl:input message="tns:CountByHairColorRequest" name="CountByHairColorRequest"></wsdl:input>
+      <wsdl:output message="tns:CountByHairColorResponse" name="CountByHairColorResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeletePerson">
+      <wsdl:input message="tns:DeletePersonRequest" name="DeletePersonRequest"></wsdl:input>
+      <wsdl:output message="tns:DeletePersonResponse" name="DeletePersonResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetPersonById">
+      <wsdl:input message="tns:GetPersonByIdRequest" name="GetPersonByIdRequest"></wsdl:input>
+      <wsdl:output message="tns:GetPersonByIdResponse" name="GetPersonByIdResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdatePerson">
+      <wsdl:input message="tns:UpdatePersonRequest" name="UpdatePersonRequest"></wsdl:input>
+      <wsdl:output message="tns:UpdatePersonResponse" name="UpdatePersonResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CountByLocation">
+      <wsdl:input message="tns:CountByLocationRequest" name="CountByLocationRequest"></wsdl:input>
+      <wsdl:output message="tns:CountByLocationResponse" name="CountByLocationResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetPersonsByHeight">
+      <wsdl:input message="tns:GetPersonsByHeightRequest" name="GetPersonsByHeightRequest"></wsdl:input>
+      <wsdl:output message="tns:GetPersonsByHeightResponse" name="GetPersonsByHeightResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAverageWeight">
+      <wsdl:input message="tns:GetAverageWeightRequest" name="GetAverageWeightRequest"></wsdl:input>
+      <wsdl:output message="tns:GetAverageWeightResponse" name="GetAverageWeightResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetPersons">
+      <wsdl:input message="tns:GetPersonsRequest" name="GetPersonsRequest"></wsdl:input>
+      <wsdl:output message="tns:GetPersonsResponse" name="GetPersonsResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Service">
+      <wsdl:fault message="tns:ServiceFault" name="ServiceFault"></wsdl:fault>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="PersonsPortSoap11" type="tns:PersonsPort">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="GetPercentageByNationalityAndEyeColor">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="GetPercentageByNationalityAndEyeColorRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="GetPercentageByNationalityAndEyeColorResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreatePerson">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="CreatePersonRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="CreatePersonResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CountByHairColor">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="CountByHairColorRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="CountByHairColorResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeletePerson">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="DeletePersonRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="DeletePersonResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetPersonById">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="GetPersonByIdRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="GetPersonByIdResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdatePerson">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="UpdatePersonRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="UpdatePersonResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CountByLocation">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="CountByLocationRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="CountByLocationResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetPersonsByHeight">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="GetPersonsByHeightRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="GetPersonsByHeightResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAverageWeight">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="GetAverageWeightRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="GetAverageWeightResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetPersons">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="GetPersonsRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="GetPersonsResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Service">
+      <soap:operation soapAction=""/>
+      <wsdl:fault name="ServiceFault">
+        <soap:fault name="ServiceFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="PersonsPortService">
+    <wsdl:port binding="tns:PersonsPortSoap11" name="PersonsPortSoap11">
+      <soap:address location="https://localhost:28444/central-service/ws"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>]]></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part></con:definitionCache><con:endpoints><con:endpoint>https://localhost:28444/central-service/ws</con:endpoint></con:endpoints><con:operation id="71b39161-7ae9-428c-8b9c-637dd77aa944" isOneWay="false" action="" name="CountByHairColor" bindingOperationName="CountByHairColor" type="Request-Response" outputName="CountByHairColorResponse" inputName="CountByHairColorRequest" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="7d362a55-2ecb-4b2d-a37a-574f58dddc18" name="Request 1"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>https://localhost:28444/central-service/ws</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:per="http://centralservicespring.assistant.com/persons">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <per:CountByHairColorRequest>\r
+         <per:hairColor>BLACK</per:hairColor>\r
+      </per:CountByHairColorRequest>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://centralservicespring.assistant.com/persons/PersonsPort/CountByHairColorRequest"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="17e4d6b0-c881-4ba4-b1f2-0f03583321db" isOneWay="false" action="" name="CountByLocation" bindingOperationName="CountByLocation" type="Request-Response" outputName="CountByLocationResponse" inputName="CountByLocationRequest" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="06d6d6c8-2ec0-419f-84c3-211319f55d55" name="Request 1"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>https://localhost:28444/central-service/ws</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:per="http://centralservicespring.assistant.com/persons">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <per:CountByLocationRequest>\r
+         <!--Optional:-->\r
+         <per:x>1</per:x>\r
+         <!--Optional:-->\r
+         <per:y>2</per:y>\r
+         <!--Optional:-->\r
+         <per:name>Alex</per:name>\r
+      </per:CountByLocationRequest>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://centralservicespring.assistant.com/persons/PersonsPort/CountByLocationRequest"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="32376afd-b184-4c6c-a389-f9538959619a" isOneWay="false" action="" name="CreatePerson" bindingOperationName="CreatePerson" type="Request-Response" outputName="CreatePersonResponse" inputName="CreatePersonRequest" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="0ac63a3c-e323-42c2-bf48-ec3d11c7e8ce" name="Request 1"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>https://localhost:28444/central-service/ws</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:per="http://centralservicespring.assistant.com/persons">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <per:CreatePersonRequest>
+         <per:person>
+            <per:name>Test Person</per:name>
+            <per:coordinates>
+               <per:x>100.5</per:x>
+               <per:y>200</per:y>
+            </per:coordinates>
+            <per:height>180</per:height>
+            <per:birthday>2004-04-03</per:birthday>
+            <per:weight>75</per:weight>
+            <per:nationality>RUSSIA</per:nationality>
+            <per:location>
+               <per:x>55.75</per:x>
+               <per:y>37</per:y>
+               <per:name>Moscow</per:name>
+            </per:location>
+            <per:hairColor>BLACK</per:hairColor>
+            <per:eyeColor>BROWN</per:eyeColor>
+         </per:person>
+      </per:CreatePersonRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://centralservicespring.assistant.com/persons/PersonsPort/CreatePersonRequest"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="4f73e9e1-8fa0-43fe-b077-9c8788ecd41d" isOneWay="false" action="" name="DeletePerson" bindingOperationName="DeletePerson" type="Request-Response" outputName="DeletePersonResponse" inputName="DeletePersonRequest" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="f0c37b8d-7909-4a94-95c8-45d0911f7ee8" name="Request 1"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>https://localhost:28444/central-service/ws</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:per="http://centralservicespring.assistant.com/persons">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <per:DeletePersonRequest>\r
+         <per:id>41</per:id>\r
+      </per:DeletePersonRequest>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://centralservicespring.assistant.com/persons/PersonsPort/DeletePersonRequest"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="69d192a7-0f72-41b8-8e7b-33111bacedda" isOneWay="false" action="" name="GetAverageWeight" bindingOperationName="GetAverageWeight" type="Request-Response" outputName="GetAverageWeightResponse" inputName="GetAverageWeightRequest" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="3139cc60-4206-42ec-a0f7-6de17010a591" name="Request 1"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>https://localhost:28444/central-service/ws</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:per="http://centralservicespring.assistant.com/persons">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <per:GetAverageWeightRequest/>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://centralservicespring.assistant.com/persons/PersonsPort/GetAverageWeightRequest"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="7655c929-f3d8-4316-a7b3-015772d52be6" isOneWay="false" action="" name="GetPercentageByNationalityAndEyeColor" bindingOperationName="GetPercentageByNationalityAndEyeColor" type="Request-Response" outputName="GetPercentageByNationalityAndEyeColorResponse" inputName="GetPercentageByNationalityAndEyeColorRequest" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="ca48f2a0-1acd-434c-9558-3fb7d468fb9c" name="Request 1"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>https://localhost:28444/central-service/ws</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:per="http://centralservicespring.assistant.com/persons">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <per:GetPercentageByNationalityAndEyeColorRequest>\r
+         <per:nationality>RUSSIA</per:nationality>\r
+         <per:eyeColor>BROWN</per:eyeColor>\r
+      </per:GetPercentageByNationalityAndEyeColorRequest>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://centralservicespring.assistant.com/persons/PersonsPort/GetPercentageByNationalityAndEyeColorRequest"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="a8976f2d-0a26-4415-832f-604e722d8ddc" isOneWay="false" action="" name="GetPersonById" bindingOperationName="GetPersonById" type="Request-Response" outputName="GetPersonByIdResponse" inputName="GetPersonByIdRequest" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="4ee3c1f9-7abe-4686-a38a-4d624bebc58e" name="Request 1"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>https://localhost:28444/central-service/ws</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:per="http://centralservicespring.assistant.com/persons">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <per:GetPersonByIdRequest>\r
+         <per:id>1</per:id>\r
+      </per:GetPersonByIdRequest>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://centralservicespring.assistant.com/persons/PersonsPort/GetPersonByIdRequest"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="05c2975c-5c79-438c-a02f-e19fb2faeba7" isOneWay="false" action="" name="GetPersons" bindingOperationName="GetPersons" type="Request-Response" outputName="GetPersonsResponse" inputName="GetPersonsRequest" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="9cd7c9de-eb05-48a8-97a3-82b1234e7e73" name="Request 1"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>https://localhost:28444/central-service/ws</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:per="http://centralservicespring.assistant.com/persons">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <per:GetPersonsRequest>
+         <per:page>0</per:page>
+         <per:size>20</per:size>
+      </per:GetPersonsRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://centralservicespring.assistant.com/persons/PersonsPort/GetPersonsRequest"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="eae39231-94ea-41a1-9191-45a90922cc2f" isOneWay="false" action="" name="GetPersonsByHeight" bindingOperationName="GetPersonsByHeight" type="Request-Response" outputName="GetPersonsByHeightResponse" inputName="GetPersonsByHeightRequest" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="45c8eeb6-ca8d-4907-8aab-59de143b1f7e" name="Request 1"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>https://localhost:28444/central-service/ws</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:per="http://centralservicespring.assistant.com/persons">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <per:GetPersonsByHeightRequest>\r
+         <per:minHeight>160</per:minHeight>\r
+      </per:GetPersonsByHeightRequest>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://centralservicespring.assistant.com/persons/PersonsPort/GetPersonsByHeightRequest"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="3be99f2b-f0fa-4efb-8c8c-ebad81fb14cc" isOneWay="false" action="" name="Service" bindingOperationName="Service" inputName="" anonymous="optional" type="Request-Response"><con:settings/><con:call id="aec41262-bbbf-497d-9af9-12ae04ff1952" name="Request 1"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>https://localhost:28444/central-service/ws</con:endpoint><con:request>&lt;soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">\r
+   &lt;soapenv:Body/>\r
+&lt;/soapenv:Envelope></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="24806ede-59f9-4fe9-8ba9-09f4483c74bf" isOneWay="false" action="" name="UpdatePerson" bindingOperationName="UpdatePerson" type="Request-Response" outputName="UpdatePersonResponse" inputName="UpdatePersonRequest" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="62bdccdf-4ed0-4562-aa50-334008d03e19" name="Request 1"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>https://localhost:28444/central-service/ws</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:per="http://centralservicespring.assistant.com/persons">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <per:UpdatePersonRequest>\r
+         <per:id>1</per:id>\r
+         <per:person>\r
+            <per:name>Ivanchik</per:name>\r
+            <per:coordinates>\r
+               <per:x>10</per:x>\r
+               <per:y>11</per:y>\r
+            </per:coordinates>\r
+             <per:height>111</per:height>\r
+            <per:birthday>2004-04-03</per:birthday>\r
+            <per:weight>111</per:weight>\r
+            <per:nationality>RUSSIA</per:nationality>\r
+            <per:location>\r
+               <per:x>111</per:x>\r
+               <per:y>111</per:y>\r
+               <per:name>RUSSIA</per:name>\r
+            </per:location>\r
+            <per:hairColor>BLONDE</per:hairColor>\r
+            <per:eyeColor>BLUE</per:eyeColor>\r
+         </per:person>\r
+      </per:UpdatePersonRequest>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://centralservicespring.assistant.com/persons/PersonsPort/UpdatePersonRequest"/><con:wsrmConfig version="1.2"/></con:call></con:operation></con:interface><con:properties/><con:wssContainer/><con:oAuth2ProfileContainer/><con:oAuth1ProfileContainer/><con:sensitiveInformation/></con:soapui-project>
